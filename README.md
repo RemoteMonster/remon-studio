@@ -1,4 +1,5 @@
 # RemoteMonster Studio
+- P2P Communication and broadcast service by using Remon Web SDK and vue.js
 - This is developed for RemoteMonster customer to understand and reference how to develop web app with RemoteMonster SDK
 - It is developed with Vue.js and Remon Web SDK.
 

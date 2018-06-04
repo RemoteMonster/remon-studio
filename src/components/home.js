@@ -120,23 +120,19 @@ export default {
       const self = this
       const observer= {
         onComplete() {
-          console.log('-----------onComplete')
           if (!self.useCast && self.useVideo)self.showLocalVideoNormal()
           self.hideCreateForm()
         },
         onConnect(chid) { // for create call channel is successful
-          console.log('-----------onConnect')
           self.hideCreateForm()
           if (!self.useCast && self.useVideo) self.showLocalVideoFull()
         },
         onJoin() {
-          console.log('-----------onJoin')
           self.hideCreateForm()
           self.localVideoVisibility = 'hidden'
           self.localVideoDisplay = 'none'
         },
         onCreate(chid) {
-          console.log('-----------onCreate')
           self.roomid = chid
           self.showLocalVideoFull()
         },
@@ -178,7 +174,7 @@ export default {
       this.showCreateForm()
     },
     hideCreateForm () {
-      if (!this.isViewer){
+      if (!this.isViewer && this.useCast){
         this.localVideoVisibility = 'visible'
         this.localVideoDisplay = 'inline'
       }else {

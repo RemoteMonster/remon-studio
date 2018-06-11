@@ -10,6 +10,7 @@ export default {
   mounted () {
     this.createDummyRemonForSearchLoop()
     this.startSearchLoop()
+    this.getDevices()
   },
   data () {
     return {
@@ -46,6 +47,12 @@ export default {
         {text:'VP9', id: 'VP9'},
         {text:'H.264', id: 'H264'}
       ],
+      cameraList: [],
+      selectedCamera: null,
+      micList: [],
+      selectedMic: null,
+      speakerList: [],
+      selectedSpeaker: null,
       framerate: 20,
       maxBandwidth: 1000,
       cameraList: [],
@@ -96,6 +103,8 @@ export default {
         dev: { logLevel: this.logLevel }
       }
       if (!this.useVideo) cfg.media.video= false
+      if (this.selectedCamera !== null) cfg.media.video.deviceId = { exact: [this.selectedCamera] }
+      if (this.selectedMic !== null) cfg.media.audio.deviceId = { exact: [this.selectedMic] }
       return cfg
     },
     startSearchLoop () {
@@ -176,6 +185,21 @@ export default {
     close () {
       remon.close()
       this.showCreateForm()
+    },
+    getDevices () {
+      navigator.mediaDevices.enumerateDevices()
+        .then((devices) => {
+            for (var i = 0; i < devices.length; i++) {
+              var device = devices[i];
+              if (device.kind === 'videoinput') {
+                this.cameraList.push({text: device.label, id: device.deviceId})
+              } else if (device.kind === 'audioinput') {
+                this.micList.push({text: device.label, id: device.deviceId})
+              } else if (device.kind === 'audiooutput') {
+                this.speakerList.push({text: device.label, id: device.deviceId})
+              }
+            };
+        })
     },
     hideCreateForm () {
       if (this.isViewer && this.useCast){

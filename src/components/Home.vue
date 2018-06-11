@@ -33,7 +33,9 @@
         <v-expansion-panel-content>
           <div slot="header">Input sources</div>
           <v-card>
-            <v-card-text>TBD</v-card-text>
+            <v-select :items="cameraList" item-text='text' item-value='id' v-model="selectedCamera" label="Camera" ></v-select>
+            <v-select :items="micList" item-text='text' item-value='id' v-model="selectedMic" label="Microphone" ></v-select>
+            <v-select :items="speakerList" item-text='text' item-value='id' v-model="selectedSpeaker" label="Speaker" ></v-select>
           </v-card>
         </v-expansion-panel-content>
         <v-expansion-panel-content>

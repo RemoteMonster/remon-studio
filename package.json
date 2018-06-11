@@ -1,5 +1,5 @@
 {
-  "name": "test-web-vue",
+  "name": "RemonStudio",
   "version": "1.0.0",
   "description": "A Vue.js project",
   "author": "Jinho Choi",
@@ -8,7 +8,8 @@
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "deploy": "scp -rp ./dist/* ubuntu@demo.remotemonster.com:/var/www/studio.remotemonster.com"
   },
   "dependencies": {
     "vue": "^2.5.2",
@@ -16,7 +17,7 @@
     "bootstrap": "^4.1.1",
     "bootstrap-vue": "^2.0.0-rc.11",
     "platform": "^1.3.5",
-    "@remotemonster/sdk": "2.0.7",
+    "@remotemonster/sdk": "2.0.9",
     "vuetify": "^1.0.18",
     "material-design-icons-iconfont": "^3.0.3"
   },

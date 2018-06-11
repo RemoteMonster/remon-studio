@@ -120,7 +120,8 @@ export default {
       const self = this
       const observer= {
         onComplete() {
-          if (!self.useCast && self.useVideo)self.showLocalVideoNormal()
+          if (self.useCast)return
+          if (self.useVideo)self.showLocalVideoNormal()
           self.hideCreateForm()
         },
         onConnect(chid) { // for create call channel is successful
@@ -134,10 +135,11 @@ export default {
         },
         onCreate(chid) {
           self.roomid = chid
+          self.hideCreateForm()
           self.showLocalVideoFull()
         },
         onClose() {
-          self.showCreateForm()
+          self.close()
         },
         onLog(msg) {
           self.logbox = self.logbox+'\n'+msg
@@ -158,6 +160,7 @@ export default {
       remon.connectChannel(this.channelId)
     },
     joinCast (chid) {
+      this.useCast = true
       this.isViewer = true
       var cfg = this.makeConfig()
       delete cfg.view.local
@@ -165,6 +168,7 @@ export default {
       remon.joinCast(chid)
     },
     createCast () {
+      this.useCast = true
       this.isViewer = false
       remon = new Remon({config:this.makeConfig(), listener: this.getObserver()})
       remon.createCast(this.channelId)
@@ -174,15 +178,17 @@ export default {
       this.showCreateForm()
     },
     hideCreateForm () {
-      if (!this.isViewer && this.useCast){
-        this.localVideoVisibility = 'visible'
-        this.localVideoDisplay = 'inline'
-      }else {
+      if (this.isViewer && this.useCast){
         this.localVideoVisibility = 'hidden'
         this.localVideoDisplay = 'none'
+      }else {
+        this.localVideoVisibility = 'visible'
+        this.localVideoDisplay = 'inline'
       }
-      this.remoteVideoVisibility = 'visible'
-      this.remoteVideoDisplay = 'inline'
+      if (this.isViewer){
+        this.remoteVideoVisibility = 'visible'
+        this.remoteVideoDisplay = 'inline'
+      }
       this.createFormVisibility = 'hidden'
       this.createFormDisplay = 'none'
       this.closeButtonVisibility = 'visible'

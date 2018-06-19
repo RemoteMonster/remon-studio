@@ -62,7 +62,7 @@ export default {
       serviceId: 'SERVICEID1',
       key: '1234567890',
       logbox: null,
-      logLevel: 'INFO',
+      logLevel: 'DEBUG',
       logLevels: [
         {text:'error', id: 'ERROR'},
         {text:'warn', id: 'WARN'},
@@ -102,7 +102,11 @@ export default {
         },
         dev: { logLevel: this.logLevel }
       }
-      if (!this.useVideo) cfg.media.video= false
+      if (!this.useVideo) {
+        cfg.media.video= false
+        cfg.view.local='#localAudio1'
+        cfg.view.remote= '#remoteAudio1'
+      }
       if (this.selectedCamera !== null) cfg.media.video.deviceId = { exact: [this.selectedCamera] }
       if (this.selectedMic !== null) cfg.media.audio.deviceId = { exact: [this.selectedMic] }
       return cfg
@@ -145,7 +149,12 @@ export default {
         onCreate(chid) {
           self.roomid = chid
           self.hideCreateForm()
-          self.showLocalVideoFull()
+          if (self.useVideo)
+            self.showLocalVideoFull()
+        },
+        onDisplayUserMedia(stream) {
+          console.log('stream~~')
+          console.log(stream)
         },
         onClose() {
           self.close()

@@ -76,7 +76,9 @@
     <v-content>
       <v-container fluid fill-height>
         <video id='remoteVideo1' style='z-index:9; position:absolute; width:80%; height:80%; overflow:auto;' autoplay controls v-bind:style='{ visibility: remoteVideoVisibility, display:remoteVideoDisplay }'></video>
+        <audio id='remoteAudio1' autoplay controls style='visibility:hidden;display:none;'></audio>
         <video id='localVideo1' style='z-index:10; margin-left:auto;margin-bottom:auto;' autoplay controls muted v-bind:style='{ width:localVideoWidth, height:localVideoHeight, visibility: localVideoVisibility, display:localVideoDisplay}'></video>
+        <audio id='localAudio1' autoplay controls style='visibility:hidden;display:none;'></audio>
         <v-flex xs8 v-bind:style='{ visibility: createFormVisibility, display: createFormDisplay}' style="margin-left:auto; margin-right:auto;">
           <img src='../assets/background.png' style='width:80%;height:80%;'>
           <v-text-field v-on:keyup.enter='createChannel' label='enter new channel name' value='Input text' v-model='channelId'></v-text-field>

@@ -17,7 +17,7 @@
     "bootstrap": "^4.1.1",
     "bootstrap-vue": "^2.0.0-rc.11",
     "platform": "^1.3.5",
-    "@remotemonster/sdk": "2.0.9",
+    "@remotemonster/sdk": "2.0.14",
     "vuetify": "^1.0.18",
     "material-design-icons-iconfont": "^3.0.3"
   },

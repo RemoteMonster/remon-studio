@@ -34,24 +34,21 @@ export default {
       hasNewChannels: false,
       selectedResolution: 'vga',
       resolutionItems: [
-        {text:'VGA(640-480)', id: 'vga'},
-        {text:'QVGA(320-240)', id: 'qvga'}
+        {text: 'VGA(640-480)', id: 'vga'},
+        {text: 'QVGA(320-240)', id: 'qvga'}
       ],
       resolutionList: {
-        'vga': {width:640, height:480},
-        'qvga': {width:320, height:240}
+        'vga': {width: 640, height: 480},
+        'qvga': {width: 320, height: 240}
       },
       selectedCodec: 'VP8',
       codecItems: [
-        {text:'VP8', id: 'VP8'},
-        {text:'VP9', id: 'VP9'},
-        {text:'H.264', id: 'H264'}
+        {text: 'VP8', id: 'VP8'},
+        {text: 'VP9', id: 'VP9'},
+        {text: 'H.264', id: 'H264'}
       ],
-      cameraList: [],
       selectedCamera: null,
-      micList: [],
       selectedMic: null,
-      speakerList: [],
       selectedSpeaker: null,
       framerate: 20,
       maxBandwidth: 1000,
@@ -64,13 +61,13 @@ export default {
       logbox: null,
       logLevel: 'DEBUG',
       logLevels: [
-        {text:'error', id: 'ERROR'},
-        {text:'warn', id: 'WARN'},
-        {text:'info', id: 'INFO'},
-        {text:'debug', id: 'DEBUG'},
-        {text:'verbose', id: 'VERBOSE'}
+        {text: 'error', id: 'ERROR'},
+        {text: 'warn', id: 'WARN'},
+        {text: 'info', id: 'INFO'},
+        {text: 'debug', id: 'DEBUG'},
+        {text: 'verbose', id: 'VERBOSE'}
       ],
-      currentStat: null,
+      currentStat: null
     }
   },
   methods: {
@@ -79,15 +76,15 @@ export default {
       let cfg = {
         credential: { key: key, serviceId: serviceId },
         view: { local: '#localVideo1', remote: '#remoteVideo1' },
-        media: { audio: true, video: true },
+        media: { audio: true, video: true }
       }
-      cfg.credential.wsurl = 'wss://'+ this.serverUrl + '/ws'
-      cfg.credential.resturl = 'https://'+ this.serverUrl + '/rest'
+      cfg.credential.wsurl = 'wss://' + this.serverUrl + '/ws'
+      cfg.credential.resturl = 'https://' + this.serverUrl + '/rest'
       remon = new Remon({config: cfg})
     },
     makeConfig () {
-      const wsurl = 'wss://'+ this.serverUrl + '/ws'
-      const resturl = 'https://'+ this.serverUrl + '/rest'
+      const wsurl = 'wss://' + this.serverUrl + '/ws'
+      const resturl = 'https://' + this.serverUrl + '/rest'
       let cfg = {
         credential: { key: this.key, serviceId: this.serviceId, wsurl: wsurl, resturl: resturl },
         view: { local: '#localVideo1', remote: '#remoteVideo1' },
@@ -96,16 +93,17 @@ export default {
           video: {
             width: { max: this.resolutionList[this.selectedResolution].width, min: 320, ideal: this.resolutionList[this.selectedResolution].width },
             height: { max: this.resolutionList[this.selectedResolution].height, min: 240, ideal: this.resolutionList[this.selectedResolution].height },
-            codec: this.selectedCodec, maxBandwidth: this.maxBandwidth, 
+            codec: this.selectedCodec,
+            maxBandwidth: this.maxBandwidth,
             frameRate: {min: this.framerate, max: this.framerate}
           }
         },
         dev: { logLevel: this.logLevel }
       }
       if (!this.useVideo) {
-        cfg.media.video= false
-        cfg.view.local='#localAudio1'
-        cfg.view.remote= '#remoteAudio1'
+        cfg.media.video = false
+        cfg.view.local = '#localAudio1'
+        cfg.view.remote = '#remoteAudio1'
       }
       if (this.selectedCamera !== null) cfg.media.video.deviceId = { exact: [this.selectedCamera] }
       if (this.selectedMic !== null) cfg.media.audio.deviceId = { exact: [this.selectedMic] }
@@ -113,67 +111,66 @@ export default {
     },
     startSearchLoop () {
       var self = this
-      setInterval(async function() {
+      setInterval(async function () {
         var searchResult = await remon.fetchCalls()
         self.roomList = []
-        searchResult.forEach( (ch, i) =>{
-          ch.type='P2P'
+        searchResult.forEach((ch, i) => {
+          ch.type = 'P2P'
           if (ch.status === 'WAIT') self.roomList.push(ch)
         })
         searchResult = await remon.fetchCasts()
-        searchResult.forEach( (ch, i) => {
-          ch.type='BROADCAST'
+        searchResult.forEach((ch, i) => {
+          ch.type = 'BROADCAST'
           self.roomList.push(ch)
         })
-        if (self.roomList.length>0) self.hasNewChannels = true
+        if (self.roomList.length > 0) self.hasNewChannels = true
         else self.hasNewChannels = false
-      },2000)
+      }, 2000)
     },
     getObserver () {
       const self = this
-      const observer= {
-        onComplete() {
-          if (self.useCast)return
+      const observer = {
+        onComplete () {
+          if (self.useCast) return
           if (self.useVideo)self.showLocalVideoNormal()
           self.hideCreateForm()
         },
-        onConnect(chid) { // for create call channel is successful
+        onConnect (chid) { // for create call channel is successful
           self.hideCreateForm()
           if (!self.useCast && self.useVideo) self.showLocalVideoFull()
         },
-        onJoin() {
+        onJoin () {
           self.hideCreateForm()
           self.localVideoVisibility = 'hidden'
           self.localVideoDisplay = 'none'
         },
-        onCreate(chid) {
+        onCreate (chid) {
           self.roomid = chid
           self.hideCreateForm()
-          if (self.useVideo)
-            self.showLocalVideoFull()
+          if (self.useVideo) { self.showLocalVideoFull() }
         },
-        onDisplayUserMedia(stream) {
+        onDisplayUserMedia (stream) {
           console.log('stream~~')
           console.log(stream)
         },
-        onClose() {
+        onClose () {
           self.close()
         },
-        onLog(msg) {
-          self.logbox = self.logbox+'\n'+msg
+        onLog (msg) {
+          self.logbox = self.logbox + '\n' + msg
         },
-        onStat(stat) {
+        onStat (stat) {
           self.currentStat = stat
         }
       }
       return observer
     },
     connectChannel (chid) {
-      remon = new Remon({config:this.makeConfig(), listener: this.getObserver()})
+      remon = new Remon({config: this.makeConfig(), listener: this.getObserver()})
       remon.connectChannel(chid)
     },
     createChannel () {
-      remon = new Remon({config:this.makeConfig(), listener: this.getObserver()})
+      remon = new Remon({config: this.makeConfig(), listener: this.getObserver()})
       if (!this.channelId) this.channelId = 'test room'
       remon.connectChannel(this.channelId)
     },
@@ -182,13 +179,13 @@ export default {
       this.isViewer = true
       var cfg = this.makeConfig()
       delete cfg.view.local
-      remon = new Remon({config:this.makeConfig(), listener: this.getObserver()})
+      remon = new Remon({config: this.makeConfig(), listener: this.getObserver()})
       remon.joinCast(chid)
     },
     createCast () {
       this.useCast = true
       this.isViewer = false
-      remon = new Remon({config:this.makeConfig(), listener: this.getObserver()})
+      remon = new Remon({config: this.makeConfig(), listener: this.getObserver()})
       remon.createCast(this.channelId)
     },
     close () {
@@ -198,27 +195,27 @@ export default {
     getDevices () {
       navigator.mediaDevices.enumerateDevices()
         .then((devices) => {
-            for (var i = 0; i < devices.length; i++) {
-              var device = devices[i];
-              if (device.kind === 'videoinput') {
-                this.cameraList.push({text: device.label, id: device.deviceId})
-              } else if (device.kind === 'audioinput') {
-                this.micList.push({text: device.label, id: device.deviceId})
-              } else if (device.kind === 'audiooutput') {
-                this.speakerList.push({text: device.label, id: device.deviceId})
-              }
-            };
+          for (var i = 0; i < devices.length; i++) {
+            var device = devices[i]
+            if (device.kind === 'videoinput') {
+              this.cameraList.push({text: device.label, id: device.deviceId})
+            } else if (device.kind === 'audioinput') {
+              this.micList.push({text: device.label, id: device.deviceId})
+            } else if (device.kind === 'audiooutput') {
+              this.speakerList.push({text: device.label, id: device.deviceId})
+            }
+          };
         })
     },
     hideCreateForm () {
-      if (this.isViewer && this.useCast){
+      if (this.isViewer && this.useCast) {
         this.localVideoVisibility = 'hidden'
         this.localVideoDisplay = 'none'
-      }else {
+      } else {
         this.localVideoVisibility = 'visible'
         this.localVideoDisplay = 'inline'
       }
-      if (this.isViewer){
+      if (this.isViewer) {
         this.remoteVideoVisibility = 'visible'
         this.remoteVideoDisplay = 'inline'
       }

@@ -20,10 +20,14 @@ export default {
       roomList: [],
       localVideoVisibility: 'hidden',
       localVideoDisplay: 'none',
+      localAudioVisibility: 'hidden',
+      localAudioDisplay: 'none',
       localVideoWidth: '20%',
       localVideoHeight: '20%',
       remoteVideoVisibility: 'hidden',
       remoteVideoDisplay: 'none',
+      remoteAudioVisibility: 'hidden',
+      remoteAudioDisplay: 'none',
       createFormVisibility: 'visible',
       createFormDisplay: 'inline',
       closeButtonVisibility: 'hidden',
@@ -69,6 +73,11 @@ export default {
         {text:'info', id: 'INFO'},
         {text:'debug', id: 'DEBUG'},
         {text:'verbose', id: 'VERBOSE'}
+      ],
+      servers: [
+        {text:'matiz', id: 'matiz.remotemonster.com'},
+        {text:'signal', id: 'signal.remotemonster.com'},
+        {text:'dev', id: 'dev.remotemonster.com'}
       ],
       currentStat: null,
     }
@@ -145,12 +154,18 @@ export default {
           self.hideCreateForm()
           self.localVideoVisibility = 'hidden'
           self.localVideoDisplay = 'none'
+          if (!self.useVideo) {
+            self.remoteVideoDisplay = 'none'
+            self.remoteVideoVisibility = 'hidden'
+            self.showAudio()
+          }
         },
         onCreate(chid) {
           self.roomid = chid
           self.hideCreateForm()
           if (self.useVideo)
             self.showLocalVideoFull()
+          else self.showAudio()
         },
         onDisplayUserMedia(stream) {
           console.log('stream~~')
@@ -229,8 +244,12 @@ export default {
     showCreateForm () {
       this.localVideoVisibility = 'hidden'
       this.localVideoDisplay = 'none'
+      this.localAudioVisibility = 'hidden'
+      this.localAudioDisplay = 'none'
       this.remoteVideoVisibility = 'hidden'
       this.remoteVideoDisplay = 'none'
+      this.remoteAudioVisibility = 'hidden'
+      this.remoteAudioDisplay = 'none'
       this.createFormVisibility = 'visible'
       this.createFormDisplay = 'inline'
       this.closeButtonVisibility = 'hidden'
@@ -240,6 +259,12 @@ export default {
       this.localVideoDisplay = 'inline'
       this.localVideoWidth = '100%'
       this.localVideoHeight = '100%'
+    },
+    showAudio () {
+      this.localAudioVisibility = 'visible'
+      this.localAudioDisplay = 'inline'
+      this.remoteAudioVisibility = 'visible'
+      this.remoteAudioDisplay = 'inline'
     },
     showLocalVideoNormal () {
       this.localVideoVisibility = 'visible'

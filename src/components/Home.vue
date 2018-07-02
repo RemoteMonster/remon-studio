@@ -11,7 +11,7 @@
             <v-text-field v-model='framerate' label='Framerate'></v-text-field>
             <v-text-field v-model='maxBandwidth' label='Max bandwidth'></v-text-field>
             <v-select :items="logLevels" item-text='text' item-value='id' v-model="logLevel" label="Log level"></v-select>
-            <v-text-field v-model='serverUrl' label='Server URL' @focusout='createDummyRemonForSearchLoop()'></v-text-field>
+            <v-select v-model='serverUrl' :items="servers" item-text='text' item-value='id' label='Server URL' @focusout='createDummyRemonForSearchLoop()'></v-select>
             <v-text-field v-model='serviceId' label='Service Id' @focusout="createDummyRemonForSearchLoop()"></v-text-field>
             <v-text-field v-model='key' label='Service key' @focusout='createDummyRemonForSearchLoop()'></v-text-field>
           </v-card>
@@ -76,9 +76,9 @@
     <v-content>
       <v-container fluid fill-height>
         <video id='remoteVideo1' style='z-index:9; position:absolute; width:80%; height:80%; overflow:auto;' autoplay controls v-bind:style='{ visibility: remoteVideoVisibility, display:remoteVideoDisplay }'></video>
-        <audio id='remoteAudio1' autoplay controls style='visibility:hidden;display:none;'></audio>
+        <audio id='remoteAudio1' autoplay controls style='visibility:hidden;display:none;' v-bind:style='{ visibility: remoteAudioVisibility, display:remoteAudioDisplay }'></audio>
         <video id='localVideo1' style='z-index:10; margin-left:auto;margin-bottom:auto;' autoplay controls muted v-bind:style='{ width:localVideoWidth, height:localVideoHeight, visibility: localVideoVisibility, display:localVideoDisplay}'></video>
-        <audio id='localAudio1' autoplay controls style='visibility:hidden;display:none;'></audio>
+        <audio id='localAudio1' autoplay muted controls style='visibility:hidden;display:none;' v-bind:style='{ visibility: localAudioVisibility, display:localAudioDisplay }'></audio>
         <v-flex xs8 v-bind:style='{ visibility: createFormVisibility, display: createFormDisplay}' style="margin-left:auto; margin-right:auto;">
           <img src='../assets/background.png' style='width:80%;height:80%;'>
           <v-text-field v-on:keyup.enter='createChannel' label='enter new channel name' value='Input text' v-model='channelId'></v-text-field>

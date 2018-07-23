@@ -11,7 +11,7 @@
     "deploy": "scp -rp ./dist/* ubuntu@demo.remotemonster.com:/var/www/studio.remotemonster.com"
   },
   "dependencies": {
-    "@remotemonster/sdk": "^2.0.14",
+    "@remotemonster/sdk": "^2.0.17",
     "material-design-icons-iconfont": "^3.0.3",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1",

@@ -9,9 +9,10 @@
             <v-select :items="resolutionItems" item-text='text' item-value='id' v-model="selectedResolution" label="Resolution" ></v-select>
             <v-select :items="codecItems" item-text='text' item-value='id' v-model="selectedCodec" label="Video codec" ></v-select>
             <v-text-field v-model='framerate' label='Framerate'></v-text-field>
+            <v-switch label='use simulcast' v-model='useSimulcast'></v-switch>
             <v-text-field v-model='maxBandwidth' label='Max bandwidth'></v-text-field>
             <v-select :items="logLevels" item-text='text' item-value='id' v-model="logLevel" label="Log level"></v-select>
-            <v-select v-model='serverUrl' :items="servers" item-text='text' item-value='id' label='Server URL' @focusout='createDummyRemonForSearchLoop()'></v-select>
+            <v-select v-model='serverUrl' :items="servers" item-text='text' item-value='id' label='Server URL' @focusout='createDummyRemonForSearchLoop()' @blur='createDummyRemonForSearchLoop()'></v-select>
             <v-text-field v-model='serviceId' label='Service Id' @focusout="createDummyRemonForSearchLoop()"></v-text-field>
             <v-text-field v-model='key' label='Service key' @focusout='createDummyRemonForSearchLoop()'></v-text-field>
           </v-card>

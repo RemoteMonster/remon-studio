@@ -35,6 +35,7 @@ export default {
       useVideo: true,
       useCast: false,
       isViewer: true,
+      useSimulcast: false,
       hasNewChannels: false,
       selectedResolution: 'vga',
       resolutionItems: [
@@ -74,11 +75,11 @@ export default {
         {text: 'verbose', id: 'VERBOSE'}
       ],
       servers: [
-        {text:'matiz', id: 'matiz.remotemonster.com'},
-        {text:'signal', id: 'signal.remotemonster.com'},
-        {text:'dev', id: 'dev.remotemonster.com'}
+        {text: 'matiz', id: 'matiz.remotemonster.com'},
+        {text: 'signal', id: 'signal.remotemonster.com'},
+        {text: 'dev', id: 'dev.remotemonster.com'}
       ],
-      currentStat: null,
+      currentStat: null
     }
   },
   methods: {
@@ -97,6 +98,7 @@ export default {
       const wsurl = 'wss://' + this.serverUrl + '/ws'
       const resturl = 'https://' + this.serverUrl + '/rest'
       let cfg = {
+        rtc: {},
         credential: { key: this.key, serviceId: this.serviceId, wsurl: wsurl, resturl: resturl },
         view: { local: '#localVideo1', remote: '#remoteVideo1' },
         media: {
@@ -118,6 +120,7 @@ export default {
       }
       if (this.selectedCamera !== null) cfg.media.video.deviceId = { exact: [this.selectedCamera] }
       if (this.selectedMic !== null) cfg.media.audio.deviceId = { exact: [this.selectedMic] }
+      if (this.useSimulcast !== null) cfg.rtc.simulcast = this.useSimulcast
       return cfg
     },
     startSearchLoop () {
@@ -163,9 +166,7 @@ export default {
         onCreate (chid) {
           self.roomid = chid
           self.hideCreateForm()
-          if (self.useVideo)
-            self.showLocalVideoFull()
-          else self.showAudio()
+          if (self.useVideo) { self.showLocalVideoFull() } else self.showAudio()
         },
         onDisplayUserMedia (stream) {
           console.log('stream~~')

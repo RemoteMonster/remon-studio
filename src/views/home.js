@@ -39,20 +39,20 @@ export default {
       hasNewChannels: false,
       selectedResolution: 'vga',
       resolutionItems: [
-        {text: 'VGA(640-480)', id: 'vga'},
-        {text: 'QVGA(320-240)', id: 'qvga'},
-        {text: 'HD(1280-720)', id: 'hd'}
+        { text: 'VGA(640-480)', id: 'vga' },
+        { text: 'QVGA(320-240)', id: 'qvga' },
+        { text: 'HD(1280-720)', id: 'hd' }
       ],
       resolutionList: {
-        'vga': {width: 640, height: 480},
-        'qvga': {width: 320, height: 240},
-        'hd': {width: 1280, height: 720}
+        'vga': { width: 640, height: 480 },
+        'qvga': { width: 320, height: 240 },
+        'hd': { width: 1280, height: 720 }
       },
       selectedCodec: 'VP8',
       codecItems: [
-        {text: 'VP8', id: 'VP8'},
-        {text: 'VP9', id: 'VP9'},
-        {text: 'H.264', id: 'H264'}
+        { text: 'VP8', id: 'VP8' },
+        { text: 'VP9', id: 'VP9' },
+        { text: 'H.264', id: 'H264' }
       ],
       selectedCamera: null,
       selectedMic: null,
@@ -68,16 +68,16 @@ export default {
       logbox: null,
       logLevel: 'DEBUG',
       logLevels: [
-        {text: 'error', id: 'ERROR'},
-        {text: 'warn', id: 'WARN'},
-        {text: 'info', id: 'INFO'},
-        {text: 'debug', id: 'DEBUG'},
-        {text: 'verbose', id: 'VERBOSE'}
+        { text: 'error', id: 'ERROR' },
+        { text: 'warn', id: 'WARN' },
+        { text: 'info', id: 'INFO' },
+        { text: 'debug', id: 'DEBUG' },
+        { text: 'verbose', id: 'VERBOSE' }
       ],
       servers: [
-        {text: 'matiz', id: 'matiz.remotemonster.com'},
-        {text: 'signal', id: 'signal.remotemonster.com'},
-        {text: 'dev', id: 'dev.remotemonster.com'}
+        { text: 'matiz', id: 'matiz.remotemonster.com' },
+        { text: 'signal', id: 'signal.remotemonster.com' },
+        { text: 'dev', id: 'dev.remotemonster.com' }
       ],
       currentStat: null
     }
@@ -92,7 +92,7 @@ export default {
       }
       cfg.credential.wsurl = 'wss://' + this.serverUrl + '/ws'
       cfg.credential.resturl = 'https://' + this.serverUrl + '/rest'
-      remon = new Remon({config: cfg})
+      remon = new Remon({ config: cfg })
     },
     makeConfig () {
       const wsurl = 'wss://' + this.serverUrl + '/ws'
@@ -108,7 +108,7 @@ export default {
             height: { max: this.resolutionList[this.selectedResolution].height, min: 240, ideal: this.resolutionList[this.selectedResolution].height },
             codec: this.selectedCodec,
             maxBandwidth: this.maxBandwidth,
-            frameRate: {min: this.framerate, max: this.framerate}
+            frameRate: { min: this.framerate, max: this.framerate }
           }
         },
         dev: { logLevel: this.logLevel }
@@ -126,6 +126,8 @@ export default {
     startSearchLoop () {
       var self = this
       setInterval(async function () {
+        remon.config.credential.serviceId = self.serviceId
+        remon.config.credential.key = self.key
         var searchResult = await remon.fetchCalls()
         self.roomList = []
         searchResult.forEach((ch, i) => {
@@ -185,11 +187,11 @@ export default {
       return observer
     },
     connectChannel (chid) {
-      remon = new Remon({config: this.makeConfig(), listener: this.getObserver()})
+      remon = new Remon({ config: this.makeConfig(), listener: this.getObserver() })
       remon.connectChannel(chid)
     },
     createChannel () {
-      remon = new Remon({config: this.makeConfig(), listener: this.getObserver()})
+      remon = new Remon({ config: this.makeConfig(), listener: this.getObserver() })
       if (!this.channelId) this.channelId = 'test room'
       remon.connectChannel(this.channelId)
     },
@@ -198,13 +200,13 @@ export default {
       this.isViewer = true
       var cfg = this.makeConfig()
       delete cfg.view.local
-      remon = new Remon({config: this.makeConfig(), listener: this.getObserver()})
+      remon = new Remon({ config: this.makeConfig(), listener: this.getObserver() })
       remon.joinCast(chid)
     },
     createCast () {
       this.useCast = true
       this.isViewer = false
-      remon = new Remon({config: this.makeConfig(), listener: this.getObserver()})
+      remon = new Remon({ config: this.makeConfig(), listener: this.getObserver() })
       remon.createCast(this.channelId)
     },
     close () {
@@ -217,11 +219,11 @@ export default {
           for (var i = 0; i < devices.length; i++) {
             var device = devices[i]
             if (device.kind === 'videoinput') {
-              this.cameraList.push({text: device.label, id: device.deviceId})
+              this.cameraList.push({ text: device.label, id: device.deviceId })
             } else if (device.kind === 'audioinput') {
-              this.micList.push({text: device.label, id: device.deviceId})
+              this.micList.push({ text: device.label, id: device.deviceId })
             } else if (device.kind === 'audiooutput') {
-              this.speakerList.push({text: device.label, id: device.deviceId})
+              this.speakerList.push({ text: device.label, id: device.deviceId })
             }
           };
         })
